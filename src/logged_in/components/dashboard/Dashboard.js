@@ -12,8 +12,8 @@ import Box from '@material-ui/core/Box';
 import Vitals from './Vitals';
 
 const styles = theme => ({
-  category: {
-    padding: theme.spacing(4)
+  leftPanel: {
+    borderRight: `2px ${theme.palette.grey[300]} solid`
   }
 });
 
@@ -96,8 +96,9 @@ class Dashboard extends Component {
   }
 
   render() {
+    const { classes } = this.props;
     return <Grid container>
-      <Grid item md={8}>
+      <Grid item md={8} className={classes.leftPanel}>
         <Box py={categoryPadding}>
           <PatientInfo data={{}}
                        onPatientAgeChange={this.onAgeChange}
@@ -117,7 +118,6 @@ class Dashboard extends Component {
             <Divider light/>
           </div>
         )}
-        <Divider light/>
         <Box py={categoryPadding}>
           <Vitals data={{}}
                   onPatientAgeChange={this.onAgeChange}

@@ -88,7 +88,7 @@ class PatientInfo extends Component {
               name="checkedB"
               color="secondary"
             />}
-          label="COVID-19 Poitive"
+          label="COVID-19 Positive"
         />
       </ListItem>
     </Grid>

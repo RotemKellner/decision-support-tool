@@ -10,17 +10,14 @@ import SaveAltIcon from '@material-ui/icons/SaveAlt';
 import OutlinedInput from '@material-ui/core/OutlinedInput';
 
 const styles = theme => ({
-  chip: {
-    margin: theme.spacing(0.5),
-  },
   section1: {
-    margin: theme.spacing(3, 2),
+    margin: theme.spacing(3),
   },
   section2: {
-    margin: theme.spacing(3, 2),
+    margin: theme.spacing(3)
   },
   section3: {
-    margin: theme.spacing(3, 1, 1),
+    margin: theme.spacing(3),
   },
 });
 
@@ -41,22 +38,24 @@ function Summary(props) {
           </Grid>
         </Grid>
       </div>
-      <div className={classes.section2}>
-        <Typography gutterBottom variant="h6">
-          Reccomendation
-        </Typography>
-      </div>
-      <div className={classes.section3}>
-        <Typography gutterBottom variant="h6">
-          What is your decision?
-        </Typography>
-      </div>
-      <Divider variant="middle" />
-      <Grid container alignItems="center">
-        <Grid item xs>
+      <Grid container direction={'column'} alignContent={'center'}>
+        <Grid item className={classes.section2} container={true} justify={'center'}>
+          <Typography gutterBottom>
+            Recommendation
+          </Typography>
+        </Grid>
+        <Grid item className={classes.section3} container={true} justify={'center'}>
+          <Typography gutterBottom variant="h6">
+            What is your decision?
+          </Typography>
+        </Grid>
+      </Grid>
+      <Divider/>
+      <Grid container justify={'space-around'}>
+        <Grid item>
           <Button startIcon={<SaveAltIcon fontSize="small" />} color="secondary">Save</Button>
         </Grid>
-        <Grid item xs>
+        <Grid item>
           <Button startIcon={<CloseIcon fontSize="small" />} color="secondary">Clear all</Button>
         </Grid>
       </Grid>
