@@ -1,0 +1,24 @@
+{
+  "files": {
+    "main.js": "/decision-support-tool/static/js/main.96e1bfa2.chunk.js",
+    "main.js.map": "/decision-support-tool/static/js/main.96e1bfa2.chunk.js.map",
+    "runtime-main.js": "/decision-support-tool/static/js/runtime-main.d56b11fb.js",
+    "runtime-main.js.map": "/decision-support-tool/static/js/runtime-main.d56b11fb.js.map",
+    "static/js/2.fd0ecd42.chunk.js": "/decision-support-tool/static/js/2.fd0ecd42.chunk.js",
+    "static/js/2.fd0ecd42.chunk.js.map": "/decision-support-tool/static/js/2.fd0ecd42.chunk.js.map",
+    "static/js/3.6caa9c66.chunk.js": "/decision-support-tool/static/js/3.6caa9c66.chunk.js",
+    "static/js/3.6caa9c66.chunk.js.map": "/decision-support-tool/static/js/3.6caa9c66.chunk.js.map",
+    "static/js/4.3bff7bd8.chunk.js": "/decision-support-tool/static/js/4.3bff7bd8.chunk.js",
+    "static/js/4.3bff7bd8.chunk.js.map": "/decision-support-tool/static/js/4.3bff7bd8.chunk.js.map",
+    "index.html": "/decision-support-tool/index.html",
+    "precache-manifest.0a0ee405cf5e168b716a19c87c46e527.js": "/decision-support-tool/precache-manifest.0a0ee405cf5e168b716a19c87c46e527.js",
+    "service-worker.js": "/decision-support-tool/service-worker.js",
+    "static/js/2.fd0ecd42.chunk.js.LICENSE.txt": "/decision-support-tool/static/js/2.fd0ecd42.chunk.js.LICENSE.txt",
+    "static/js/3.6caa9c66.chunk.js.LICENSE.txt": "/decision-support-tool/static/js/3.6caa9c66.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.d56b11fb.js",
+    "static/js/3.6caa9c66.chunk.js",
+    "static/js/main.96e1bfa2.chunk.js"
+  ]
+}
