@@ -8,8 +8,7 @@ import Radio from '@material-ui/core/Radio';
 import Checkbox from '@material-ui/core/Checkbox';
 import Box from '@material-ui/core/Box';
 import TextField from '@material-ui/core/TextField';
-
-const color = '#F08627';
+import Dashboard from './Dashboard';
 
 const styles = theme => ({
   idInput: {
@@ -44,7 +43,7 @@ class PatientInfo extends Component {
   return <Grid container spacing={2} alignItems={'center'}>
     <Grid item md={3}>
       <ListItem>
-        <AccountCircleOutlinedIcon style={{ color }}/>
+        <AccountCircleOutlinedIcon style={{ color: Dashboard.STATIC_RISK_CONFIG.patient.color }}/>
         <Box m={1}/>
         <Typography
           variant={'body2'}

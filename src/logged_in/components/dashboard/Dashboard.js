@@ -17,12 +17,25 @@ const styles = theme => ({
   }
 });
 
+const FACTOR = 0.9;
 const categoryPadding = 2;
 const otherConditions = 'Other Conditions';
 const homeEnvironment = 'Home Environment';
+const initialState = {
+  id: 0,
+  riskScores: {},
+  totalRiskScore: 0,
+  selections: {}
+};
 
 class Dashboard extends Component {
-  static CONFIG = {
+  static STATIC_RISK_CONFIG = {
+    patient: {
+      color: '#F08627'
+    }
+  };
+
+  static DYNAMIC_RISK_CONFIG = {
     Pulmonary: {
       color: '#8716E0',
       icon: AirlineSeatFlatAngledOutlinedIcon,
@@ -47,24 +60,18 @@ class Dashboard extends Component {
 
   constructor(props) {
     super(props);
-    this.state = {
-      id: 0,
-      riskScores: {
-        patient: 0
-      },
-      totalRiskScore: 0,
-      selections: {}
-    };
+    this.state = initialState;
     // eslint-disable-next-line no-sequences
-    Object.assign(this.state.riskScores, Object.keys(Dashboard.CONFIG).reduce((a,b) => (a[b] = 0, a),{}));
-    Object.keys(Dashboard.CONFIG).forEach(key => {
-      this.state.selections[key] = Dashboard.CONFIG[key];
+    Object.assign(this.state.riskScores, Object.keys(Dashboard.STATIC_RISK_CONFIG).concat(Object.keys(Dashboard.DYNAMIC_RISK_CONFIG)).reduce((a,b) => (a[b] = 0, a),{}));
+    Object.keys(Dashboard.DYNAMIC_RISK_CONFIG).forEach(key => {
+      this.state.selections[key] = Dashboard.DYNAMIC_RISK_CONFIG[key];
       this.state.selections[key].items = this.state.selections[key].items.map(item => { return {key: item, selected: false}});
     });
 
     this.onAgeChange = this.onAgeChange.bind(this);
     this.onIDChange = this.onIDChange.bind(this);
     this.onSelectionChange = this.onSelectionChange.bind(this);
+    this.onClearAll = this.onClearAll.bind(this);
   }
 
   onSelectionChange(category, categoryItem) {
@@ -73,16 +80,17 @@ class Dashboard extends Component {
     item.selected = !item.selected;
 
     let riskScores = {...this.state.riskScores};
-    riskScores[category] = selections[category].items.filter(item => item.selected).reduce(a => a + 1, 0);
+    riskScores[category] = selections[category].items.filter(item => item.selected).reduce(a => a + 0.9, 0);
     this.setState({selections});
     this.setState({riskScores});
     this.updateTotalRiskScore(riskScores);
   }
 
   onAgeChange(age) {
-    let riskScore = {...this.state.riskScores};
-    riskScore.patient = age / 19.32;
-    this.updateTotalRiskScore(riskScore);
+    let riskScores = {...this.state.riskScores};
+    riskScores.patient = (age / 19.32) * FACTOR;
+    this.setState({riskScores});
+    this.updateTotalRiskScore(riskScores);
   }
 
   onIDChange(event) {
@@ -90,9 +98,13 @@ class Dashboard extends Component {
   }
 
   updateTotalRiskScore(riskScores) {
-    let totalRiskScore = Object.values(riskScores).reduce((a, b) => a + b, 0) * 0.9;
+    let totalRiskScore = Object.values(riskScores).reduce((a, b) => a + b, 0);
     let mortality = (1-(0.98916**(totalRiskScore)));
     this.setState({mortality, totalRiskScore})
+  }
+
+  onClearAll() {
+    this.setState(initialState);
   }
 
   render() {
@@ -126,7 +138,7 @@ class Dashboard extends Component {
         </Box>
       </Grid>
       <Grid item md={4}>
-        <Summary riskScores={this.state.riskScores} totalRiskScore={this.state.totalRiskScore}/>
+        <Summary riskScores={this.state.riskScores} totalRiskScore={this.state.totalRiskScore} onClearAll={this.onClearAll}/>
       </Grid>
     </Grid>
   }
