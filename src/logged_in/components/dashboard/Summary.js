@@ -41,6 +41,10 @@ function getProgressData(riskScores) {
   for (let key in riskScores) {
     results.push({name: key, value: makeNice(riskScores[key]), percent: toPrecent(riskScores[key]), color: allConfigs[key].color});
   }
+  let emptyPercentage = 100 - results.map(r => Number(r.percent)).reduce((a,b) => a + b, 0);
+  if (emptyPercentage) {
+    results.push({name: '', value: makeNice(emptyPercentage), percent: emptyPercentage, color: '#fff'});
+  }
   return results;
 }
 

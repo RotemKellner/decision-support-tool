@@ -10,6 +10,7 @@ import FavoriteBorderOutlinedIcon from '@material-ui/icons/FavoriteBorderOutline
 import Divider from '@material-ui/core/Divider';
 import Box from '@material-ui/core/Box';
 import Vitals from './Vitals';
+import _cloneDeep from 'lodash/cloneDeep';
 
 const styles = theme => ({
   leftPanel: {
@@ -60,18 +61,11 @@ class Dashboard extends Component {
 
   constructor(props) {
     super(props);
-    this.state = initialState;
-    // eslint-disable-next-line no-sequences
-    Object.assign(this.state.riskScores, Object.keys(Dashboard.STATIC_RISK_CONFIG).concat(Object.keys(Dashboard.DYNAMIC_RISK_CONFIG)).reduce((a,b) => (a[b] = 0, a),{}));
-    Object.keys(Dashboard.DYNAMIC_RISK_CONFIG).forEach(key => {
-      this.state.selections[key] = Dashboard.DYNAMIC_RISK_CONFIG[key];
-      this.state.selections[key].items = this.state.selections[key].items.map(item => { return {key: item, selected: false}});
-    });
-
+    this.state = _cloneDeep(initialState);
     this.onAgeChange = this.onAgeChange.bind(this);
     this.onIDChange = this.onIDChange.bind(this);
     this.onSelectionChange = this.onSelectionChange.bind(this);
-    this.onClearAll = this.onClearAll.bind(this);
+    this.reset = this.reset.bind(this);
   }
 
   onSelectionChange(category, categoryItem) {
@@ -103,8 +97,19 @@ class Dashboard extends Component {
     this.setState({mortality, totalRiskScore})
   }
 
-  onClearAll() {
-    this.setState(initialState);
+  componentDidMount() {
+    this.reset();
+  }
+
+  reset() {
+    let state = _cloneDeep(initialState);
+    // eslint-disable-next-line no-sequences
+    Object.assign(state.riskScores, Object.keys(Dashboard.STATIC_RISK_CONFIG).concat(Object.keys(Dashboard.DYNAMIC_RISK_CONFIG)).reduce((a,b) => (a[b] = 0, a),{}));
+    Object.keys(Dashboard.DYNAMIC_RISK_CONFIG).forEach(key => {
+      state.selections[key] = _cloneDeep(Dashboard.DYNAMIC_RISK_CONFIG[key]);
+      state.selections[key].items = state.selections[key].items.map(item => { return {key: item, selected: false}});
+    });
+    this.setState(state);
   }
 
   render() {
@@ -138,7 +143,7 @@ class Dashboard extends Component {
         </Box>
       </Grid>
       <Grid item md={4}>
-        <Summary riskScores={this.state.riskScores} totalRiskScore={this.state.totalRiskScore} onClearAll={this.onClearAll}/>
+        <Summary riskScores={this.state.riskScores} totalRiskScore={this.state.totalRiskScore} onClearAll={this.reset}/>
       </Grid>
     </Grid>
   }

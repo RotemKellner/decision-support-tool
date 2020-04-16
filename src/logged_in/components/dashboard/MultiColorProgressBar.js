@@ -44,18 +44,6 @@ class MultiColorProgressBar extends Component {
       return null;
     }, this);
 
-    let legends = parent.readings && parent.readings.length && parent.readings.map(function(item, i) {
-      if(item.percent > 0) {
-        return (
-          <div className="legend" key={i}>
-            <span className="dot" style={{'color': item.color}}>●</span>
-            <span className="label">{item.name}</span>
-          </div>
-        )
-      }
-      return null;
-    }, this);
-
     return (
       <div className="multicolor-bar">
         <div className="values">
@@ -66,9 +54,6 @@ class MultiColorProgressBar extends Component {
         </div>
         <div className="bars">
           {bars === ''?'':bars}
-        </div>
-        <div className="legends">
-          {legends === ''?'':legends}
         </div>
       </div>
     );
