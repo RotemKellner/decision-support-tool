@@ -3,8 +3,13 @@ import { MuiThemeProvider, CssBaseline } from "@material-ui/core";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import theme from "./theme";
 import GlobalStyles from "./GlobalStyles";
+import ReactGA from 'react-ga';
 
 const LoggedInComponent = lazy(() => import("./logged_in/components/Main"));
+
+const trackingId = 'UA-163803019-1';
+ReactGA.initialize(trackingId);
+ReactGA.pageview(window.location.pathname + window.location.search);
 
 function App() {
   return (
