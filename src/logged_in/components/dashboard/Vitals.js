@@ -28,7 +28,7 @@ class Vitals extends Component {
     const Icon = this.props.icon;
 
   return <Grid container spacing={2} alignItems={'center'}>
-    <Grid item md={3}>
+    <Grid item md={2}>
       <ListItem>
         <Icon style={{ color: this.props.color }}/>
         <Box m={1}/>
@@ -40,7 +40,7 @@ class Vitals extends Component {
         </Typography>
       </ListItem>
     </Grid>
-    <Grid item md={9}>
+    <Grid item md={10}>
       <ListItem disableGutters>
         {this.props.items.map(vital =>
           <TextField

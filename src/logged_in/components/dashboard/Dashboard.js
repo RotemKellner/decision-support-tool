@@ -35,14 +35,14 @@ class Dashboard extends Component {
   static STATIC_RISK_CONFIG = {
     text: "Patient",
     key: "Patient",
-    color: "#F08627",
+    color: "#8716E0",
     icon: AccountCircleOutlinedIcon
   };
 
   static MEDICAL_PRECONDITIONS_CONFIG = [
     {
       text: "Pulmonary",
-      color: "#8716E0",
+      color: "#00B0BB",
       icon: AirlineSeatFlatAngledOutlinedIcon,
       items: [
         {
@@ -76,7 +76,7 @@ class Dashboard extends Component {
     },
     {
       text: "Other Conditions",
-      color: "#00B0BB",
+      color: "#F08627",
       icon: ListAltOutlinedIcon,
       items: [
         {
@@ -125,7 +125,7 @@ class Dashboard extends Component {
 
   static VITALS_CONFIG = {
     text: "Vitals",
-    color: "#F08627",
+    color: "#8716E0",
     icon: ShowChartIcon,
     items: [
       {text: 'Temperature', key: 'temperature', unit: 'Celsius'},

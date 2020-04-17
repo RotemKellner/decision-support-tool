@@ -22,7 +22,7 @@ class RiskCategory extends Component {
     const { classes } = this.props;
     const Icon = this.props.icon;
     return <Grid container spacing={2} alignItems={'center'}>
-      <Grid item md={3}>
+      <Grid item md={2}>
         <ListItem>
           <Icon style={{ color: this.props.color }}/>
           <Box m={1}/>
@@ -34,7 +34,7 @@ class RiskCategory extends Component {
           </Typography>
         </ListItem>
       </Grid>
-      <Grid item md={9} className={classes.chipWrapper}>
+      <Grid item md={10} className={classes.chipWrapper}>
           {this.props.items && Object.keys(this.props.items).map((detail, id) => {
             let isSelected = this.props.items[detail].selected;
             let isContribution = Boolean(this.props.items[detail].contribution);
