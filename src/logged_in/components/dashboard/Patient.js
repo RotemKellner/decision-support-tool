@@ -1,10 +1,11 @@
 import _cloneDeep from 'lodash/cloneDeep';
+import md5 from 'md5';
 
 class Patient {
   constructor() {
-    this.id = '123';
+    this.id = '';
     this.information = {
-      age: 10,
+      age: 0,
       gender: 'male'
     };
     this.coronaPositive = false;
@@ -48,8 +49,9 @@ class Patient {
 
   toServerModel() {
     let patient = _cloneDeep(this);
+    patient.information.age = patient.information.age < 2 ? 2 : patient.information.age;
     return {
-      patient_id: patient.id,
+      patient_id: md5(patient.id),
       patient_information: this.BoolToNum(patient.information),
       corona_status: {
         corona_positive: patient.coronaPositive

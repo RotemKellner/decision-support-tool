@@ -1,15 +1,9 @@
 import React, {Component} from 'react';
 import PropTypes from "prop-types";
 import {Grid, ListItem, Typography, withStyles} from '@material-ui/core';
-import ShowChartIcon from '@material-ui/icons/ShowChart';
+
 import Box from '@material-ui/core/Box';
 import TextField from '@material-ui/core/TextField';
-
-const color = '#F08627';
-const vitals = [{name: 'Temperature', unit: 'Celsius'},
-  {name: 'Pulse', unit: 'Per minute'},
-  {name: 'Respiratory Rate', unit: 'Per minute'},
-  {name: 'O2 Saturation', unit: 'ABG'}];
 
 const styles = theme => ({
   input: {
@@ -25,13 +19,18 @@ class Vitals extends Component {
     };
   }
 
+  vitalChange(event, key) {
+    this.props.onClinicalStatusChange(key, Number(event.target.value));
+  }
+
   render() {
   const { classes } = this.props;
+    const Icon = this.props.icon;
 
   return <Grid container spacing={2} alignItems={'center'}>
     <Grid item md={3}>
       <ListItem>
-        <ShowChartIcon style={{ color }}/>
+        <Icon style={{ color: this.props.color }}/>
         <Box m={1}/>
         <Typography
           variant={'body2'}
@@ -43,12 +42,14 @@ class Vitals extends Component {
     </Grid>
     <Grid item md={9}>
       <ListItem disableGutters>
-        {vitals.map(vital =>
+        {this.props.items.map(vital =>
           <TextField
-            key={vital.name}
+            value={this.props.patient.clinicalStatus[vital.key]}
+            onChange={(e) => this.vitalChange(e, vital.key)}
+            key={vital.key}
             type={'number'}
             className={classes.input}
-            label={vital.name}
+            label={vital.text}
             helperText={vital.unit}
             variant="outlined"
             color="secondary"/>
@@ -60,7 +61,11 @@ class Vitals extends Component {
 }
 
 Vitals.propTypes = {
-  data: PropTypes.object.isRequired
+  icon: PropTypes.object.isRequired,
+  color: PropTypes.string.isRequired,
+  items: PropTypes.array.isRequired,
+  patient: PropTypes.object.isRequired,
+  onClinicalStatusChange: PropTypes.func.isRequired
 };
 
 export default withStyles(styles, { withTheme: true })(Vitals);

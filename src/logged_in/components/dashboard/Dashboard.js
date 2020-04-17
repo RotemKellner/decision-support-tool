@@ -7,6 +7,7 @@ import AirlineSeatFlatAngledOutlinedIcon from '@material-ui/icons/AirlineSeatFla
 import HomeOutlinedIcon from '@material-ui/icons/HomeOutlined';
 import ListAltOutlinedIcon from '@material-ui/icons/ListAltOutlined';
 import FavoriteBorderOutlinedIcon from '@material-ui/icons/FavoriteBorderOutlined';
+import ShowChartIcon from '@material-ui/icons/ShowChart';
 import Divider from '@material-ui/core/Divider';
 import Box from '@material-ui/core/Box';
 import Vitals from './Vitals';
@@ -122,6 +123,18 @@ class Dashboard extends Component {
     ]
   };
 
+  static VITALS_CONFIG = {
+    text: "Vitals",
+    color: "#F08627",
+    icon: ShowChartIcon,
+    items: [
+      {text: 'Temperature', key: 'temperature', unit: 'Celsius'},
+      {text: 'Pulse', key: 'pulse', unit: 'Per minute'},
+      {text: 'Respiratory Rate', key: 'respiratory_rate', unit: 'Per minute'},
+      {text: 'O2 Saturation', key: 'oxygen_saturation', unit: 'ABG'}
+    ]
+  };
+
   static SCORE_CATEGORIES = [Dashboard.STATIC_RISK_CONFIG].concat(Dashboard.MEDICAL_PRECONDITIONS_CONFIG);
 
   constructor(props) {
@@ -134,6 +147,7 @@ class Dashboard extends Component {
     this.onIDChange = this.onIDChange.bind(this);
     this.onMedicalItemChange = this.onMedicalItemChange.bind(this);
     this.onHomeEnvItemChange = this.onHomeEnvItemChange.bind(this);
+    this.onClinicalStatusChange = this.onClinicalStatusChange.bind(this);
     this.reset = this.reset.bind(this);
   }
 
@@ -150,11 +164,10 @@ class Dashboard extends Component {
   onHomeEnvItemChange(category, categoryItem) {
     let item = this.state.otherConsiderationsSelection.items.find(item => item.key === categoryItem);
     item.selected = !item.selected;
-    let patient = {...this.state.patient};
-    patient.otherConsiderations[categoryItem] = item.selected;
+    this.patient.otherConsiderations[categoryItem] = item.selected;
     this.setState({otherConsiderationsSelection: this.state.otherConsiderationsSelection});
-    this.setState({patient: this.state.patient});
-    this.Api.updateRecommendation(this.state.patient);
+    this.setState({patient: this.patient});
+    this.Api.updateRecommendation(this.patient);
   }
 
   onMedicalItemChange(category, categoryItem) {
@@ -178,24 +191,37 @@ class Dashboard extends Component {
 
   onAgeChange(age) {
     this.patient.information.age = age;
-    this.updatePatientState();
+    this.setState({patient: this.patient});
+    const MIN_AGE = 2;
+    const MAX_AGE = 120;
+    if (MIN_AGE <= age && age < MAX_AGE) {
+      this.updatePatientScore();
+    }
   }
 
   onGenderChange(gender) {
     this.patient.information.gender = gender;
-    this.updatePatientState();
+    this.setState({patient: this.patient});
+    this.updatePatientScore();
   }
 
-  async updatePatientState() {
+  onIDChange(event) {
+    this.patient.id = event.target.value;
     this.setState({patient: this.patient});
+    this.updatePatientScore();
+  }
+
+  async updatePatientScore() {
     let riskScores = {...this.state.riskScores};
-    let recommendation = await this.Api.updateRecommendation(this.state.patient);
+    let recommendation = await this.Api.updateRecommendation(this.patient);
     riskScores.Patient = this.Api.getPatientScore(recommendation);
     this.setState({riskScores, recommendation});
   }
 
-  onIDChange(event) {
-    this.setState({id: event.target.value});
+  onClinicalStatusChange(key, value) {
+    this.patient.clinicalStatus[key] = value;
+    this.setState({patient: this.patient});
+    this.Api.updateRecommendation(this.patient);
   }
 
   prepare() {
@@ -223,8 +249,7 @@ class Dashboard extends Component {
                        patient={this.state.patient}
                        onPatientAgeChange={this.onAgeChange}
                        onPatientGenderChange={this.onGenderChange}
-                       onIDChange={this.onIDChange}>
-          </PatientInfo>
+                       onIDChange={this.onIDChange}/>
         </Box>
         <Divider light/>
         {Object.keys(this.state.medicalSelections).map(categoryKey =>
@@ -248,11 +273,13 @@ class Dashboard extends Component {
                           categoryName={Dashboard.HOME_ENV_CONFIG.text}/>
           </Box>
         }
+        <Divider light/>
         <Box py={categoryPadding}>
-          <Vitals data={{}}
-                  onPatientAgeChange={this.onAgeChange}
-                  onIDChange={this.onIDChange}>
-          </Vitals>
+          <Vitals color={Dashboard.VITALS_CONFIG.color}
+                  icon={Dashboard.VITALS_CONFIG.icon}
+                  items={Dashboard.VITALS_CONFIG.items}
+                  patient={this.state.patient}
+                  onClinicalStatusChange={this.onClinicalStatusChange}/>
         </Box>
       </Grid>
       <Grid item md={4}>

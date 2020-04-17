@@ -8,8 +8,6 @@ import Checkbox from '@material-ui/core/Checkbox';
 import Box from '@material-ui/core/Box';
 import TextField from '@material-ui/core/TextField';
 
-const MIN_AGE = 2;
-const MAX_AGE = 120;
 const styles = theme => ({
   idInput: {
     marginRight: theme.spacing(2)
@@ -31,9 +29,7 @@ class PatientInfo extends Component {
 
   onAgeChange(event) {
     let age = Number(event.target.value);
-    if (MIN_AGE <= age && age < MAX_AGE) {
-      this.props.onPatientAgeChange(age);
-    }
+    this.props.onPatientAgeChange(age);
   }
 
   onGenderChange(event) {
@@ -67,10 +63,9 @@ class PatientInfo extends Component {
           onChange={this.props.onIDChange}
           color="secondary"/>
         <TextField type={'number'} className={classes.ageInput}
-                   inputProps={{ min: "0", max: '120'}}
                    label={'Age'}
                    variant="outlined"
-                   value={this.props.patient.information.age}
+                   value={Boolean(this.props.patient.information.age) && this.props.patient.information.age}
                    onChange={this.onAgeChange}
                    color="secondary"/>
         <RadioGroup aria-label="gender" value={this.state.gender} onChange={this.onGenderChange.bind(this)}>
