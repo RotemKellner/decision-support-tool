@@ -85,7 +85,7 @@ class PatientInfo extends Component {
         <FormControlLabel
           control={
             <Checkbox
-              checked={true}
+              checked={this.props.coronaPositive}
               onChange={() => {}}
               name="checkedB"
               color="secondary"
