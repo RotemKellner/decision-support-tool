@@ -30,6 +30,6 @@ function App() {
   );
 }
 
-serviceWorker.register();
+serviceWorker.unregister();
 
 export default App;

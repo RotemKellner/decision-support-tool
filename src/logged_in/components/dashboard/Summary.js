@@ -36,10 +36,11 @@ function getProgressData(riskScores) {
   const MAX_VALUE = 20;
   let makeNice = a => a.toFixed(1).replace(/[.,]00$/, "");
   let toPrecent = (item) => makeNice(((item / MAX_VALUE) * 100));
-  let allConfigs = Object.assign({}, Dashboard.STATIC_RISK_CONFIG, Dashboard.DYNAMIC_RISK_CONFIG);
+
   let results = [];
   for (let key in riskScores) {
-    results.push({name: key, value: makeNice(riskScores[key]), percent: toPrecent(riskScores[key]), color: allConfigs[key].color});
+    let color = Dashboard.SCORE_CATEGORIES.find(config => config.text === key).color;
+    results.push({name: key, value: makeNice(riskScores[key]), percent: toPrecent(riskScores[key]), color});
   }
   let emptyPercentage = 100 - results.map(r => Number(r.percent)).reduce((a,b) => a + b, 0);
   if (emptyPercentage) {
@@ -65,10 +66,28 @@ function Summary(props) {
       </div>
       <Grid container direction={'column'} alignContent={'center'}>
         <Grid item className={classes.section2} container={true} justify={'center'}>
-          <Typography gutterBottom>
-            Recommendation
-          </Typography>
-          <Chip size={'medium'} variant="outlined" color="secondary" icon={<HotelIcon />} label={'Hotel'}/>
+          <Grid
+            container
+            direction="column"
+            justify="center"
+            alignItems="center">
+            <Typography gutterBottom>
+              Recommendation
+            </Typography>
+
+            {(() => {
+              switch (props.recommendation.recommendation) {
+                case 'home':
+                  return <Chip size={'medium'} color="secondary" icon={<HomeIcon />} label={'Home'}/>;
+                case 'hotel':
+                  return <Chip size={'medium'} color="secondary" icon={<HotelIcon />} label={'Hotel'}/>;
+                case 'hospital':
+                  return <Chip size={'medium'} color="secondary" icon={<LocalHospitalIcon />} label={'Hospital'}/>;
+                default:
+                  return ''
+              }
+            })()}
+          </Grid>
         </Grid>
         <Grid item className={classes.section3}>
           <Grid container direction={'column'} alignContent={'center'}>
@@ -103,7 +122,7 @@ function Summary(props) {
 Summary.propTypes = {
   theme: PropTypes.object.isRequired,
   riskScores: PropTypes.object.isRequired,
-  totalRiskScore: PropTypes.number.isRequired,
+  recommendation: PropTypes.object.isRequired,
   onClearAll: PropTypes.func.isRequired
 };
 

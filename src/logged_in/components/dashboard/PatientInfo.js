@@ -1,15 +1,15 @@
 import React, {Component} from 'react';
 import PropTypes from "prop-types";
 import {Grid, ListItem, Typography, withStyles} from '@material-ui/core';
-import AccountCircleOutlinedIcon from '@material-ui/icons/AccountCircleOutlined';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Radio from '@material-ui/core/Radio';
 import Checkbox from '@material-ui/core/Checkbox';
 import Box from '@material-ui/core/Box';
 import TextField from '@material-ui/core/TextField';
-import Dashboard from './Dashboard';
 
+const MIN_AGE = 2;
+const MAX_AGE = 120;
 const styles = theme => ({
   idInput: {
     marginRight: theme.spacing(2)
@@ -24,26 +24,31 @@ class PatientInfo extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      gender: 'female'
+      gender: this.props.patient.information.gender
     };
     this.onAgeChange = this.onAgeChange.bind(this);
   }
 
   onAgeChange(event) {
-    this.props.onPatientAgeChange(event.target.value);
+    let age = Number(event.target.value);
+    if (MIN_AGE <= age && age < MAX_AGE) {
+      this.props.onPatientAgeChange(age);
+    }
   }
 
   onGenderChange(event) {
+    this.props.onPatientGenderChange(event.target.value);
     this.setState({gender: event.target.value});
   }
 
   render() {
   const { classes } = this.props;
+  const Icon = this.props.icon;
 
   return <Grid container spacing={2} alignItems={'center'}>
     <Grid item md={3}>
       <ListItem>
-        <AccountCircleOutlinedIcon style={{ color: Dashboard.STATIC_RISK_CONFIG.patient.color }}/>
+        <Icon style={{ color: this.props.color }}/>
         <Box m={1}/>
         <Typography
           variant={'body2'}
@@ -57,12 +62,15 @@ class PatientInfo extends Component {
       <ListItem disableGutters>
         <TextField type={'number'} className={classes.idInput}
           label={'ID'}
+          value={this.props.patient.id}
           variant="outlined"
           onChange={this.props.onIDChange}
           color="secondary"/>
         <TextField type={'number'} className={classes.ageInput}
+                   inputProps={{ min: "0", max: '120'}}
                    label={'Age'}
                    variant="outlined"
+                   value={this.props.patient.information.age}
                    onChange={this.onAgeChange}
                    color="secondary"/>
         <RadioGroup aria-label="gender" value={this.state.gender} onChange={this.onGenderChange.bind(this)}>
@@ -72,7 +80,7 @@ class PatientInfo extends Component {
         <FormControlLabel
           control={
             <Checkbox
-              checked={true}
+              checked={this.props.patient.otherConsiderations.pregnent_healthy}
               onChange={() => {}}
               name="checkedB"
               color="secondary"
@@ -96,8 +104,11 @@ class PatientInfo extends Component {
 }
 
 PatientInfo.propTypes = {
-  data: PropTypes.object.isRequired,
+  icon: PropTypes.object.isRequired,
+  color: PropTypes.string.isRequired,
+  patient: PropTypes.object.isRequired,
   onPatientAgeChange: PropTypes.func.isRequired,
+  onPatientGenderChange: PropTypes.func.isRequired,
   onIDChange: PropTypes.func.isRequired
 };
 

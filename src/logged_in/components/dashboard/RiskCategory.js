@@ -7,8 +7,13 @@ import Chip from '@material-ui/core/Chip';
 import theme from '../../../theme';
 
 const styles = theme => ({
-  chip: {
-    marginRight: theme.spacing(1)
+  chipWrapper: {
+    display: 'flex',
+    justifyContent: 'left',
+    flexWrap: 'wrap',
+    '& > *': {
+      margin: theme.spacing(0.5),
+    }
   }
 });
 
@@ -29,17 +34,18 @@ class RiskCategory extends Component {
           </Typography>
         </ListItem>
       </Grid>
-      <Grid item md={9}>
-        <ListItem disableGutters>
+      <Grid item md={9} className={classes.chipWrapper}>
           {this.props.items && Object.keys(this.props.items).map((detail, id) => {
-            let color = this.props.items[detail].selected ? this.props.color : theme.palette.grey[600];
-            return <Chip key={id}
-                         className={classes.chip}
+            let isSelected = this.props.items[detail].selected;
+            let isContribution = Boolean(this.props.items[detail].contribution);
+            let color = isSelected ? this.props.color : theme.palette.grey[600];
+            let label = `${this.props.items[detail].text} ${isContribution ? '+'+this.props.items[detail].contribution: ''}`;
+            return <Box key={id} fontWeight={isSelected ? 'bold' : 'normal'}><Chip
                          style={{backgroundColor: fade(color, 0.2), color: color}}
-                         label={this.props.items[detail].key}
-                         onClick={this.props.onSelectionChange.bind(null, this.props.categoryName, this.props.items[detail].key)}/>;
+                         label={label}
+                         onClick={this.props.onSelectionChange.bind(null, this.props.categoryName, this.props.items[detail].key)}/>
+            </Box>;
           })}
-        </ListItem>
       </Grid>
     </Grid>
   };
