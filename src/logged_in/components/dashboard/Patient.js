@@ -8,7 +8,7 @@ class Patient {
       age: 0,
       gender: 'male'
     };
-    this.coronaPositive = false;
+    this.coronaPositive = undefined;
     this.medicalPreconditions = {
       copd: false,
       htn: false,
@@ -24,12 +24,12 @@ class Patient {
       aids: false
     };
     this.clinicalStatus = {
-      temperature: 0,
-      pulse: 0,
-      respiratory_rate: 0,
-      auscultation: 0,
-      mental_status: 0,
-      oxygen_saturation: 0
+      temperature: undefined,
+      pulse: undefined,
+      respiratory_rate: undefined,
+      auscultation: undefined,
+      mental_status: undefined,
+      oxygen_saturation: undefined
     };
 
     this.treatMent = {
@@ -42,7 +42,7 @@ class Patient {
     this.otherConsiderations = {
       mobility_problem: false,
       potential_for_home_quarentine: false,
-      pregnent_healthy: false,
+      pregnent_healthy: undefined,
       youngs_with_asthma: false
     }
   }
