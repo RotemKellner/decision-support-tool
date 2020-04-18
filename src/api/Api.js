@@ -16,10 +16,6 @@ class Api {
   async getUserInfo(id) {
     return axios.post(this.baseURL + 'getRecordsByPatient', {patient_id: md5(id)}, this.config).then(a => Object.values(a.data || {})[0]);
   }
-
-  getPatientScore(recommendation) {
-    return Math.max(0, recommendation.risk_score - Object.values(recommendation.contributing_factors).reduce((a,b) => a+b , 0));
-  }
 }
 
 export {Api};

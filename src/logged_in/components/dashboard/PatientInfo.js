@@ -8,7 +8,6 @@ import Checkbox from '@material-ui/core/Checkbox';
 import Box from '@material-ui/core/Box';
 import TextField from '@material-ui/core/TextField';
 import isIsraeliIdValid from 'israeli-id-validator';
-import CircularProgress from '@material-ui/core/CircularProgress';
 
 const styles = theme => ({
   idInput: {
@@ -39,6 +38,10 @@ class PatientInfo extends Component {
     return isIsraeliIdValid(this.props.patient.id);
   }
 
+  getAgeContributionFactor() {
+    return (this.props.recommendation.contributing_factors && `+${this.props.recommendation.contributing_factors.age.toPrecision(2)}`) || ' '
+  }
+
   render() {
   const { classes } = this.props;
   const Icon = this.props.icon;
@@ -64,15 +67,16 @@ class PatientInfo extends Component {
                      value={this.props.patient.id}
                      variant="outlined"
                      onChange={this.props.onIDChange}
-                     color="secondary">
-            <CircularProgress />
+                     color="secondary"
+                     helperText=" ">
           </TextField>
           <TextField type={'number'} className={classes.ageInput}
                      label={'Age'}
                      variant="outlined"
                      value={Boolean(this.props.patient.information.age) && this.props.patient.information.age}
                      onChange={this.onAgeChange}
-                     color="secondary"/>
+                     color="secondary"
+                     helperText={this.getAgeContributionFactor()}/>
         <RadioGroup aria-label="gender" value={this.props.patient.information.gender} style={{display: 'inline'}} onChange={this.onGenderChange.bind(this)}>
           <Grid container style={{display: 'inline-flex', width: 185}}>
             <Grid item md={6}>
@@ -118,6 +122,7 @@ PatientInfo.propTypes = {
   icon: PropTypes.object.isRequired,
   color: PropTypes.string.isRequired,
   patient: PropTypes.object.isRequired,
+  recommendation: PropTypes.object.isRequired,
   onPatientAgeChange: PropTypes.func.isRequired,
   onPatientGenderChange: PropTypes.func.isRequired,
   onIDChange: PropTypes.func.isRequired

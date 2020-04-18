@@ -191,7 +191,7 @@ class Dashboard extends Component {
       riskScores[category] = Object.values(categoryFactors).reduce((a, b) => a + b, 0);
     }
 
-    riskScores.Patient = this.Api.getPatientScore(recommendation);
+    riskScores.Patient = recommendation.contributing_factors.age;
     this.setState({riskScores, recommendation});
   }
 
@@ -258,6 +258,7 @@ class Dashboard extends Component {
           <PatientInfo color={Dashboard.STATIC_RISK_CONFIG.color}
                        icon={Dashboard.STATIC_RISK_CONFIG.icon}
                        patient={this.state.patient}
+                       recommendation={this.state.recommendation}
                        onPatientAgeChange={this.onAgeChange}
                        onPatientGenderChange={this.onGenderChange}
                        onIDChange={this.onIDChange}/>
