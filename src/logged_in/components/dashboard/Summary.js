@@ -7,15 +7,15 @@ import Typography from '@material-ui/core/Typography';
 import withStyles from '@material-ui/core/styles/withStyles';
 import CloseIcon from '@material-ui/icons/Close';
 import SaveAltIcon from '@material-ui/icons/SaveAlt';
-import ComputerIcon from '@material-ui/icons/Computer';
 import Box from '@material-ui/core/Box';
 import HomeIcon from '@material-ui/icons/Home';
-import HotelIcon from '@material-ui/icons/Hotel';
+import {RobotIcon, HotelIcon} from '../../../icons/icons';
 import LocalHospitalIcon from '@material-ui/icons/LocalHospital';
 
 import Chip from '@material-ui/core/Chip';
 import MultiColorProgressBar from './MultiColorProgressBar';
 import Dashboard from './Dashboard';
+import html2canvas from 'html2canvas';
 
 const styles = theme => ({
   section1: {
@@ -50,6 +50,14 @@ function getProgressData(riskScores) {
 }
 
 function Summary(props) {
+  function screenshot() {
+    html2canvas(document.querySelector('main')).then(canvas => {
+      var a = document.createElement('a');
+      a.href = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");
+      a.download = `${props.patient.id}_decision_tool.png`;
+      a.click();
+    })
+  }
   const { classes } = props;
 
   return (
@@ -92,7 +100,7 @@ function Summary(props) {
         <Grid item className={classes.section3}>
           <Grid container direction={'column'} alignContent={'center'}>
             <Grid item container={true} justify={'center'}>
-              <Box mr={1}><ComputerIcon></ComputerIcon></Box>
+              <Box mr={1}><RobotIcon></RobotIcon></Box>
               <Typography variant="h6">What is your decision??</Typography>
             </Grid>
             <Grid item container={true} justify={'center'}>
@@ -109,7 +117,7 @@ function Summary(props) {
       <Divider/>
       <Grid container justify={'space-around'}>
         <Grid item>
-          <Button startIcon={<SaveAltIcon fontSize="small" />} color="secondary">Save</Button>
+          <Button startIcon={<SaveAltIcon fontSize="small" />} color="secondary" onClick={screenshot}>Save</Button>
         </Grid>
         <Grid item>
           <Button startIcon={<CloseIcon fontSize="small" />} color="secondary" onClick={props.onClearAll}>Clear all</Button>
@@ -120,6 +128,7 @@ function Summary(props) {
 }
 
 Summary.propTypes = {
+  patient: PropTypes.object.isRequired,
   theme: PropTypes.object.isRequired,
   riskScores: PropTypes.object.isRequired,
   recommendation: PropTypes.object.isRequired,

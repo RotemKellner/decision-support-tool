@@ -32,7 +32,7 @@ class Patient {
       oxygen_saturation: 0
     };
 
-    this.treatMent = {
+    this.treatment = {
       psychiatric_treatment: false,
       anti_inflamatory_regular_treatment: false,
       growth_hormone_children: false,
@@ -58,15 +58,35 @@ class Patient {
       },
       medical_preconditions: this.BoolToNum(patient.medicalPreconditions),
       clinical_status: this.BoolToNum(patient.clinicalStatus),
-      treatment: this.BoolToNum(patient.treatMent),
+      treatment: this.BoolToNum(patient.treatment),
       other_considerations: this.BoolToNum(patient.otherConsiderations)
     };
   }
 
-  BoolToNum (object) {
-    const returnObject = {}
+  toClientModel(id, userInfo) {
+    let patient = new Patient();
+    patient.id = id;
+    patient.information = userInfo.patient_information;
+    patient.medicalPreconditions = this.NumToBool(userInfo.medical_preconditions);
+    patient.clinicalStatus = userInfo.clinical_status;
+    patient.coronaPositive = userInfo.corona_status.corona_positive;
+    patient.treatment = this.NumToBool(userInfo.treatment);
+    patient.otherConsiderations = this.NumToBool(userInfo.other_considerations);
+    return patient;
+  }
+
+  BoolToNum(object) {
+    const returnObject = {};
     for (const [key, value] of Object.entries(object)) {
       returnObject[key] = typeof value === 'boolean' ? Number(value) : value;
+    }
+    return returnObject
+  }
+
+  NumToBool(object) {
+    const returnObject = {}
+    for (const [key, value] of Object.entries(object)) {
+      returnObject[key] = typeof value === 'number' ? Boolean(value) : value;
     }
     return returnObject
   }

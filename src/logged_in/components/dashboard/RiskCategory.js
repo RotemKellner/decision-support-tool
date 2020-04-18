@@ -54,7 +54,10 @@ class RiskCategory extends Component {
 RiskCategory.propTypes = {
   categoryName: PropTypes.string.isRequired,
   items: PropTypes.array.isRequired,
-  icon: PropTypes.object.isRequired,
+  icon: PropTypes.oneOfType([
+    PropTypes.func.isRequired,
+    PropTypes.object.isRequired
+  ]),
   color: PropTypes.string.isRequired,
   onSelectionChange: PropTypes.func.isRequired
 };

@@ -8,6 +8,7 @@ import Checkbox from '@material-ui/core/Checkbox';
 import Box from '@material-ui/core/Box';
 import TextField from '@material-ui/core/TextField';
 import isIsraeliIdValid from 'israeli-id-validator';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 const styles = theme => ({
   idInput: {
@@ -22,9 +23,6 @@ const styles = theme => ({
 class PatientInfo extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      gender: this.props.patient.information.gender
-    };
     this.onAgeChange = this.onAgeChange.bind(this);
   }
 
@@ -35,7 +33,6 @@ class PatientInfo extends Component {
 
   onGenderChange(event) {
     this.props.onPatientGenderChange(event.target.value);
-    this.setState({gender: event.target.value});
   }
 
   isIDValid() {
@@ -67,14 +64,16 @@ class PatientInfo extends Component {
                      value={this.props.patient.id}
                      variant="outlined"
                      onChange={this.props.onIDChange}
-                     color="secondary"/>
+                     color="secondary">
+            <CircularProgress />
+          </TextField>
           <TextField type={'number'} className={classes.ageInput}
                      label={'Age'}
                      variant="outlined"
                      value={Boolean(this.props.patient.information.age) && this.props.patient.information.age}
                      onChange={this.onAgeChange}
                      color="secondary"/>
-        <RadioGroup aria-label="gender" value={this.state.gender} style={{display: 'inline'}} onChange={this.onGenderChange.bind(this)}>
+        <RadioGroup aria-label="gender" value={this.props.patient.information.gender} style={{display: 'inline'}} onChange={this.onGenderChange.bind(this)}>
           <Grid container style={{display: 'inline-flex', width: 185}}>
             <Grid item md={6}>
               <FormControlLabel value="female" control={<Radio size={'small'} color={'secondary'}/>} label="Female"/>
@@ -84,7 +83,7 @@ class PatientInfo extends Component {
             </Grid>
             <Grid item md={12}>
               <FormControlLabel
-                style={{visibility: this.state.gender === 'female' ? 'visible' : 'hidden'}}
+                style={{visibility: this.props.patient.information.gender === 'female' ? 'visible' : 'hidden'}}
                 control={
                   <Checkbox
                     size={'small'}

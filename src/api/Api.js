@@ -1,4 +1,5 @@
 import axios from 'axios';
+import md5 from 'md5';
 
 class Api {
   constructor() {
@@ -10,6 +11,10 @@ class Api {
 
   async updateRecommendation(patient) {
     return axios.post(this.baseURL + 'getPatientModelRecommendation', patient.toServerModel(), this.config).then(a => a.data.recommendation);
+  }
+
+  async getUserInfo(id) {
+    return axios.post(this.baseURL + 'getRecordsByPatient', {patient_id: md5(id)}, this.config).then(a => Object.values(a.data || {})[0]);
   }
 
   getPatientScore(recommendation) {

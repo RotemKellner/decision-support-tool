@@ -3,11 +3,9 @@ import PatientInfo from "./PatientInfo";
 import {Grid, withStyles} from '@material-ui/core';
 import Summary from './Summary';
 import RiskCategory from './RiskCategory';
-import AirlineSeatFlatAngledOutlinedIcon from '@material-ui/icons/AirlineSeatFlatAngledOutlined';
 import HomeOutlinedIcon from '@material-ui/icons/HomeOutlined';
 import ListAltOutlinedIcon from '@material-ui/icons/ListAltOutlined';
 import FavoriteBorderOutlinedIcon from '@material-ui/icons/FavoriteBorderOutlined';
-import ShowChartIcon from '@material-ui/icons/ShowChart';
 import Divider from '@material-ui/core/Divider';
 import Box from '@material-ui/core/Box';
 import Vitals from './Vitals';
@@ -15,6 +13,8 @@ import _pick from 'lodash/pick';
 import {Api} from '../../../api/Api';
 import AccountCircleOutlinedIcon from '@material-ui/icons/AccountCircleOutlined';
 import {Patient} from './Patient';
+import {LungsIcon, PulseIcon} from '../../../icons/icons';
+import isIsraeliIdValid from 'israeli-id-validator';
 
 const styles = theme => ({
   leftPanel: {
@@ -43,7 +43,7 @@ class Dashboard extends Component {
     {
       text: "Pulmonary",
       color: "#00B0BB",
-      icon: AirlineSeatFlatAngledOutlinedIcon,
+      icon: LungsIcon,
       items: [
         {
           key: 'copd',
@@ -126,7 +126,7 @@ class Dashboard extends Component {
   static VITALS_CONFIG = {
     text: "Vitals",
     color: "#8716E0",
-    icon: ShowChartIcon,
+    icon: PulseIcon,
     items: [
       {text: 'Temperature', key: 'temperature', unit: 'Celsius'},
       {text: 'Pulse', key: 'pulse', unit: 'Per minute'},
@@ -156,17 +156,17 @@ class Dashboard extends Component {
   }
 
   reset() {
-    initialState.patient = new Patient();
+    this.patient = new Patient();
+    initialState.patient = this.patient;
     this.setState(initialState);
-    this.prepare();
+    this.setSelections();
   }
 
   onHomeEnvItemChange(category, categoryItem) {
     let item = this.state.otherConsiderationsSelection.items.find(item => item.key === categoryItem);
     item.selected = !item.selected;
     this.patient.otherConsiderations[categoryItem] = item.selected;
-    this.setState({otherConsiderationsSelection: this.state.otherConsiderationsSelection});
-    this.setState({patient: this.patient});
+    this.setState({patient: this.patient, otherConsiderationsSelection: this.state.otherConsiderationsSelection});
     this.Api.updateRecommendation(this.patient);
   }
 
@@ -174,18 +174,24 @@ class Dashboard extends Component {
     let item = this.state.medicalSelections[category].items.find(item => item.key === categoryItem);
     item.selected = !item.selected;
     this.patient.medicalPreconditions[categoryItem] = item.selected;
-    this.setState({selections: this.state.medicalSelections});
-    this.setState({patient: this.patient});
-    this.updateMedicalPreconditionsScore(category, item);
+    this.setState({patient: this.patient, selections: this.state.medicalSelections});
+    this.updateScores();
   }
 
-  async updateMedicalPreconditionsScore(category, item) {
-    let categoryKeys = Dashboard.MEDICAL_PRECONDITIONS_CONFIG.find(a => a.text === category).items.map(a => a.key);
+  async updateScores() {
     let riskScores = {...this.state.riskScores};
     let recommendation = await this.Api.updateRecommendation(this.patient);
-    let categoryFactors = _pick(recommendation.contributing_factors, categoryKeys);
-    item.contribution = categoryFactors[item.key];
-    riskScores[category] = Object.values(categoryFactors).reduce((a, b) => a + b, 0);
+
+    for (let category in this.state.medicalSelections) {
+      this.state.medicalSelections[category].items.forEach(item => {
+        item.contribution = recommendation.contributing_factors[item.key] ? recommendation.contributing_factors[item.key] : 0;
+      });
+      let categoryKeys = Dashboard.MEDICAL_PRECONDITIONS_CONFIG.find(a => a.text === category).items.map(a => a.key);
+      let categoryFactors = _pick(recommendation.contributing_factors, categoryKeys);
+      riskScores[category] = Object.values(categoryFactors).reduce((a, b) => a + b, 0);
+    }
+
+    riskScores.Patient = this.Api.getPatientScore(recommendation);
     this.setState({riskScores, recommendation});
   }
 
@@ -195,27 +201,28 @@ class Dashboard extends Component {
     const MIN_AGE = 2;
     const MAX_AGE = 120;
     if (MIN_AGE <= age && age < MAX_AGE) {
-      this.updatePatientScore();
+      this.updateScores();
     }
   }
 
   onGenderChange(gender) {
     this.patient.information.gender = gender;
     this.setState({patient: this.patient});
-    this.updatePatientScore();
+    this.updateScores();
   }
 
-  onIDChange(event) {
+  async onIDChange(event) {
     this.patient.id = event.target.value;
     this.setState({patient: this.patient});
-    this.updatePatientScore();
-  }
-
-  async updatePatientScore() {
-    let riskScores = {...this.state.riskScores};
-    let recommendation = await this.Api.updateRecommendation(this.patient);
-    riskScores.Patient = this.Api.getPatientScore(recommendation);
-    this.setState({riskScores, recommendation});
+    if (isIsraeliIdValid(this.patient.id)) {
+      let userInfo = await this.Api.getUserInfo(this.patient.id);
+      if (userInfo !== 'patient not found') {
+        this.patient = this.patient.toClientModel(this.patient.id, userInfo)
+        this.setSelections();
+      }
+      this.setState({patient: this.patient});
+      this.updateScores();
+    }
   }
 
   onClinicalStatusChange(key, value) {
@@ -224,18 +231,22 @@ class Dashboard extends Component {
     this.Api.updateRecommendation(this.patient);
   }
 
-  prepare() {
+  setSelections() {
     let medicalSelections = {...this.state.medicalSelections};
     let otherConsiderationsSelection = {...this.state.otherConsiderationsSelection};
     // eslint-disable-next-line no-sequences
     Object.assign(this.state.riskScores, Dashboard.SCORE_CATEGORIES.map(o => o.text).reduce((a,b) => (a[b] = 0, a),{}));
     Dashboard.MEDICAL_PRECONDITIONS_CONFIG.forEach(category => {
       medicalSelections[category.text] = category;
-      medicalSelections[category.text].items = medicalSelections[category.text].items.map(item => { return {...item, selected: false, contribution: 0}});
+      medicalSelections[category.text].items = medicalSelections[category.text].items.map(item => {
+        return {...item, selected: this.patient.medicalPreconditions[item.key], contribution: 0}
+      });
     });
 
     otherConsiderationsSelection = Dashboard.HOME_ENV_CONFIG;
-    otherConsiderationsSelection.items = otherConsiderationsSelection.items.map(item => { return {...item, selected: false}});
+    otherConsiderationsSelection.items = otherConsiderationsSelection.items.map(item => {
+      return {...item, selected: this.patient.otherConsiderations[item.key]}
+    });
     this.setState({medicalSelections, otherConsiderationsSelection});
   }
 
@@ -283,7 +294,7 @@ class Dashboard extends Component {
         </Box>
       </Grid>
       <Grid item md={4}>
-        <Summary riskScores={this.state.riskScores} recommendation={this.state.recommendation} onClearAll={this.reset}/>
+        <Summary patient={this.state.patient} riskScores={this.state.riskScores} recommendation={this.state.recommendation} onClearAll={this.reset}/>
       </Grid>
     </Grid>
   }

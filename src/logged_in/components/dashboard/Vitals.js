@@ -61,7 +61,7 @@ class Vitals extends Component {
 }
 
 Vitals.propTypes = {
-  icon: PropTypes.object.isRequired,
+  icon: PropTypes.func.isRequired,
   color: PropTypes.string.isRequired,
   items: PropTypes.array.isRequired,
   patient: PropTypes.object.isRequired,
