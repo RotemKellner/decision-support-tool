@@ -1,7 +1,7 @@
 import React, { Fragment, Suspense, lazy } from "react";
 import { MuiThemeProvider, CssBaseline } from "@material-ui/core";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
-import Amplify from 'aws-amplify';
+import Amplify, {API} from 'aws-amplify';
 import {Config} from './aws-exports';
 import '@aws-amplify/ui/dist/style.css';
 
@@ -12,7 +12,7 @@ import ReactGA from 'react-ga';
 import { withAuthenticator } from 'aws-amplify-react';
 
 Amplify.configure(Config);
-
+API.configure(Config);
 
 const LoggedInComponent = lazy(() => import("./logged_in/components/Main"));
 

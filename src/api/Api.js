@@ -9,12 +9,12 @@ class Api {
 
   async updateRecommendation(patient) {
     let body = patient.toServerModel();
-    return API.post(Endpoints.getRecommendation, `/${Endpoints.getRecommendation}`, {body, headers: await this.getHeaders()}).then(a => a.recommendation);
+    return API.post(Endpoints.stagingAuth, '/getPatientModelRecommendation', {body, headers: await this.getHeaders()}).then(a => a.recommendation);
   }
 
   async getUserInfo(id) {
     let body = {patient_id: md5(id)};
-    return API.post(Endpoints.getRecordsByPatient, `/${Endpoints.getRecordsByPatient}`, {body, headers: await this.getHeaders()}).then(a => Object.values(a || {})[0]);
+    return API.post(Endpoints.stagingAuth, '/getRecordsByPatient', {body, headers: await this.getHeaders()}).then(a => Object.values(a || {})[0]);
   }
 }
 

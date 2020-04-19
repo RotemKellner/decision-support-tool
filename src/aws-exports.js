@@ -1,6 +1,5 @@
 let Endpoints = {
-    getRecommendation: 'getPatientModelRecommendation',
-    getRecordsByPatient: 'getRecordsByPatient'
+    stagingAuth: 'stagingAuth'
 };
 
 let Config = {
@@ -17,17 +16,11 @@ let Config = {
     API: {
         endpoints: [
             {
-                name: Endpoints.getRecommendation,
-                endpoint: "https://cn8pc7plbl.execute-api.eu-west-1.amazonaws.com/staging-auth"
-            },
-            {
-                name: Endpoints.getRecordsByPatient,
+                name: Endpoints.stagingAuth,
                 endpoint: "https://cn8pc7plbl.execute-api.eu-west-1.amazonaws.com/staging-auth"
             }
         ]
     }
 };
-
-
 
 export {Config, Endpoints}
