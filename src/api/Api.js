@@ -1,4 +1,4 @@
-import md5 from 'md5';
+import getUuid from 'uuid-by-string';
 import {Auth, API} from 'aws-amplify';
 import {Endpoints} from '../aws-exports';
 
@@ -13,7 +13,7 @@ class Api {
   }
 
   async getUserInfo(id) {
-    let body = {patient_id: md5(id)};
+    let body = {patient_id: getUuid(id)};
     return API.post(Endpoints.stagingAuth, '/getRecordsByPatient', {body, headers: await this.getHeaders()}).then(a => Object.values(a || {})[0]);
   }
 }

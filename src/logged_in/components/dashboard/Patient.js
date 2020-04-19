@@ -1,5 +1,5 @@
 import _cloneDeep from 'lodash/cloneDeep';
-import md5 from 'md5';
+import getUuid from 'uuid-by-string';
 
 class Patient {
   constructor() {
@@ -49,9 +49,8 @@ class Patient {
 
   toServerModel() {
     let patient = _cloneDeep(this);
-    patient.information.age = patient.information.age < 2 ? 2 : patient.information.age;
     return {
-      patient_id: md5(patient.id),
+      patient_id: getUuid(patient.id),
       patient_information: this.BoolToNum(patient.information),
       corona_status: {
         corona_positive: patient.coronaPositive
