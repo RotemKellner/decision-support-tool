@@ -109,7 +109,7 @@ const styles = theme => ({
 function NavBar(props) {
   const { classes, width } = props;
 
-  const [username, setUserName] = React.useState("Dr. Liat Ezra")
+  const [username, setUserName] = React.useState("Dr. Liat Ezra");
 
   const handleSignOut = () => {
     Auth.signOut()
@@ -122,7 +122,7 @@ function NavBar(props) {
       setUserName(user.username)
     })
     .catch(err => console.error(err));
-  
+
 
   return (
     <Fragment>
