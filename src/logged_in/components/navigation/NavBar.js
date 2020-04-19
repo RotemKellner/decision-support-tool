@@ -1,4 +1,6 @@
 import React, { Fragment} from "react";
+import { Auth } from "aws-amplify";
+
 import classNames from "classnames";
 import {
   AppBar,
@@ -11,6 +13,8 @@ import {
   isWidthUp,
   withWidth
 } from "@material-ui/core";
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
 import Divider from '@material-ui/core/Divider';
 
 const styles = theme => ({
@@ -96,11 +100,29 @@ const styles = theme => ({
     justifyContent: "center",
     paddingTop: theme.spacing(2),
     paddingBottom: theme.spacing(2)
+  },
+  signout: {
+    minWidth: "auto",
   }
 });
 
 function NavBar(props) {
   const { classes, width } = props;
+
+  const [username, setUserName] = React.useState("Dr. Liat Ezra")
+
+  const handleSignOut = () => {
+    Auth.signOut()
+    .then(data => console.log(data))
+    .catch(err => console.log(err));
+  };
+
+  Auth.currentAuthenticatedUser()
+    .then(user => {
+      setUserName(user.username)
+    })
+    .catch(err => console.error(err));
+  
 
   return (
     <Fragment>
@@ -137,10 +159,16 @@ function NavBar(props) {
                 <ListItemText
                   className={classes.username}
                   primary={
-                    <Typography color="textPrimary">Dr. Liat Ezra</Typography>
+                  <Typography color="textPrimary">{username}</Typography>
                   }
                 />
               )}
+              {/* {accountOpen ? <ExpandLess /> : <ExpandMore />} */}
+            </ListItem>
+            <ListItem button onClick={handleSignOut} className={classNames(classes.iconListItem)}>
+              <ListItemIcon className={classNames(classes.signout)}>
+                <ExitToAppIcon />
+              </ListItemIcon>
             </ListItem>
           </Box>
         </Toolbar>
