@@ -6,7 +6,7 @@ class Patient {
     this.id = '';
     this.information = {
       age: 0,
-      gender: 'male'
+      gender: ''
     };
     this.coronaPositive = false;
     this.medicalPreconditions = {

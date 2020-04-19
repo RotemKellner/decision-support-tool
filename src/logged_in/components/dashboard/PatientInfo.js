@@ -8,6 +8,7 @@ import Checkbox from '@material-ui/core/Checkbox';
 import Box from '@material-ui/core/Box';
 import TextField from '@material-ui/core/TextField';
 import isIsraeliIdValid from 'israeli-id-validator';
+import theme from '../../../theme';
 
 const styles = theme => ({
   idInput: {
@@ -42,6 +43,10 @@ class PatientInfo extends Component {
     return (this.props.recommendation.contributing_factors && `+${this.props.recommendation.contributing_factors.age.toPrecision(2)}`) || ' '
   }
 
+  getColor() {
+    return this.props.patient.information.age ? this.props.color : theme.palette.common.grey;
+  }
+
   render() {
   const { classes } = this.props;
   const Icon = this.props.icon;
@@ -49,7 +54,7 @@ class PatientInfo extends Component {
   return <Grid container spacing={2} alignItems={'center'}>
     <Grid item md={2}>
       <ListItem>
-        <Icon style={{ color: this.props.color }}/>
+        <Icon style={{ color: this.getColor() }}/>
         <Box m={1}/>
         <Typography
           variant={'body2'}
@@ -68,7 +73,7 @@ class PatientInfo extends Component {
                      variant="outlined"
                      onChange={this.props.onIDChange}
                      color="secondary"
-                     helperText=" ">
+                     helperText={this.isIDValid() ? ' ' : 'Enter a valid ID'}>
           </TextField>
           <TextField type={'number'} className={classes.ageInput}
                      label={'Age'}

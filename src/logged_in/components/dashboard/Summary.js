@@ -29,6 +29,9 @@ const styles = theme => ({
   },
   chips: {
     paddingTop: theme.spacing(1)
+  },
+  divider: {
+    height: 1
   }
 });
 
@@ -51,7 +54,7 @@ function getProgressData(riskScores) {
 
 function Summary(props) {
   function screenshot() {
-    html2canvas(document.querySelector('main')).then(canvas => {
+    html2canvas(document.querySelector('.MuiGrid-root')).then(canvas => {
       var a = document.createElement('a');
       a.href = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");
       a.download = `${props.patient.id}_decision_tool.png`;
@@ -101,7 +104,7 @@ function Summary(props) {
           <Grid container direction={'column'} alignContent={'center'}>
             <Grid item container={true} justify={'center'}>
               <Box mr={1}><RobotIcon></RobotIcon></Box>
-              <Typography variant="h6">What is your decision??</Typography>
+              <Typography variant="h6">What is your decision?</Typography>
             </Grid>
             <Grid item container={true} justify={'center'}>
               <Typography variant={'body2'}>Human input will improve the algorithm</Typography>
@@ -114,7 +117,7 @@ function Summary(props) {
           </Grid>
         </Grid>
       </Grid>
-      <Divider/>
+      <Divider light classes={{root: classes.divider}}/>
       <Grid container justify={'space-around'}>
         <Grid item>
           <Button startIcon={<SaveAltIcon fontSize="small" />} color="secondary" onClick={screenshot}>Save</Button>

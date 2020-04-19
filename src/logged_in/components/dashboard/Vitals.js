@@ -4,6 +4,7 @@ import {Grid, ListItem, Typography, withStyles} from '@material-ui/core';
 
 import Box from '@material-ui/core/Box';
 import TextField from '@material-ui/core/TextField';
+import theme from '../../../theme';
 
 const styles = theme => ({
   input: {
@@ -12,11 +13,9 @@ const styles = theme => ({
 });
 
 class Vitals extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
 
-    };
+  getColor() {
+    return Object.values(this.props.patient.clinicalStatus).reduce((a,b) => a+b, 0) ? this.props.color : theme.palette.common.grey;
   }
 
   vitalChange(event, key) {
@@ -30,7 +29,7 @@ class Vitals extends Component {
   return <Grid container spacing={2} alignItems={'center'}>
     <Grid item md={2}>
       <ListItem>
-        <Icon style={{ color: this.props.color }}/>
+        <Icon style={{ color: this.getColor() }}/>
         <Box m={1}/>
         <Typography
           variant={'body2'}
@@ -44,7 +43,7 @@ class Vitals extends Component {
       <ListItem disableGutters>
         {this.props.items.map(vital =>
           <TextField
-            value={this.props.patient.clinicalStatus[vital.key]}
+            value={Boolean(this.props.patient.clinicalStatus[vital.key]) && this.props.patient.clinicalStatus[vital.key]}
             onChange={(e) => this.vitalChange(e, vital.key)}
             key={vital.key}
             type={'number'}

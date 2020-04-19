@@ -18,13 +18,17 @@ const styles = theme => ({
 });
 
 class RiskCategory extends Component {
+  getColor() {
+    return this.props.items.find(a => a.selected) ? this.props.color : theme.palette.common.grey;
+  }
+
   render() {
     const { classes } = this.props;
     const Icon = this.props.icon;
     return <Grid container spacing={2} alignItems={'center'}>
       <Grid item md={2}>
         <ListItem>
-          <Icon style={{ color: this.props.color }}/>
+          <Icon style={{ color: this.getColor() }}/>
           <Box m={1}/>
           <Typography
             variant={'body2'}
@@ -41,7 +45,7 @@ class RiskCategory extends Component {
             let color = isSelected ? this.props.color : theme.palette.grey[600];
             let label = `${this.props.items[detail].text} ${isContribution ? '+'+this.props.items[detail].contribution: ''}`;
             return <Box key={id} fontWeight={isSelected ? 'bold' : 'normal'}><Chip
-                         style={{backgroundColor: fade(color, 0.2), color: color}}
+                         style={{backgroundColor: fade(color, 0.2), color}}
                          label={label}
                          onClick={this.props.onSelectionChange.bind(null, this.props.categoryName, this.props.items[detail].key)}/>
             </Box>;

@@ -16,6 +16,7 @@ import {
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import Divider from '@material-ui/core/Divider';
+import theme from '../../../theme';
 
 const styles = theme => ({
   appBar: {
@@ -83,12 +84,6 @@ const styles = theme => ({
   mobileItemSelected: {
     backgroundColor: `${theme.palette.primary.main} !important`
   },
-  brandText: {
-    marginRight: theme.spacing(1),
-  },
-  brandSubText: {
-    marginLeft: theme.spacing(1),
-  },
   username: {
     paddingLeft: 0,
     paddingRight: theme.spacing(2)
@@ -129,21 +124,9 @@ function NavBar(props) {
       <AppBar position="sticky" className={classes.appBar}>
         <Toolbar className={classes.appBarToolbar}>
           <ListItem display="flex" alignItems="center">
-              <Typography
-                variant="h4"
-                className={classes.brandText}
-                display="inline"
-                color="primary">
-                HOSP
-              </Typography>
-              <Divider orientation="vertical" flexItem></Divider>
-              <Typography
-                variant="subtitle1"
-                className={classes.brandSubText}
-                display="block"
-                color="secondary">
-                Decision Support Tool
-              </Typography>
+            <Box color="text.primary" fontWeight={900} fontSize={24} mr={2}>HOSP</Box>
+            <Divider orientation="vertical" flexItem></Divider>
+            <Box color={theme.palette.secondary.main} fontSize={18} ml={2}>Decision Support Tool</Box>
           </ListItem>
           <Box
             display="flex"

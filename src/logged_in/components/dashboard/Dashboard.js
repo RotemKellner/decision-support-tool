@@ -18,7 +18,10 @@ import isIsraeliIdValid from 'israeli-id-validator';
 
 const styles = theme => ({
   leftPanel: {
-    borderRight: `2px ${theme.palette.grey[300]} solid`
+    boxShadow: `2px 0px 0px rgba(0, 0, 0, 0.12);`
+  },
+  divider: {
+    height: 1
   }
 });
 
@@ -70,7 +73,7 @@ class Dashboard extends Component {
         },
         {
           key: 'chf',
-          text: 'Heart failure'
+          text: 'Heart Failure'
         }
       ]
     },
@@ -85,7 +88,7 @@ class Dashboard extends Component {
         },
         {
           key: 'aids',
-          text: 'HIV/AIDS',
+          text: 'HIV / AIDS',
         },
         {
           key: 'dementia',
@@ -98,6 +101,10 @@ class Dashboard extends Component {
         {
           key: 'ckd',
           text: 'Chronic Kidney Disease'
+        },
+        {
+          key: 'cancer',
+          text: 'Malignancy'
         }
       ]
     }
@@ -263,7 +270,7 @@ class Dashboard extends Component {
                        onPatientGenderChange={this.onGenderChange}
                        onIDChange={this.onIDChange}/>
         </Box>
-        <Divider light/>
+        <Divider light classes={{root: classes.divider}}/>
         {Object.keys(this.state.medicalSelections).map(categoryKey =>
           <div key={categoryKey}>
             <Box py={categoryPadding}>
@@ -273,7 +280,7 @@ class Dashboard extends Component {
                             color={this.state.medicalSelections[categoryKey].color}
                             categoryName={categoryKey}/>
             </Box>
-            <Divider light/>
+            <Divider light classes={{root: classes.divider}}/>
           </div>
         )}
         {this.state.otherConsiderationsSelection.items &&
@@ -285,7 +292,7 @@ class Dashboard extends Component {
                           categoryName={Dashboard.HOME_ENV_CONFIG.text}/>
           </Box>
         }
-        <Divider light/>
+        <Divider light classes={{root: classes.divider}}/>
         <Box py={categoryPadding}>
           <Vitals color={Dashboard.VITALS_CONFIG.color}
                   icon={Dashboard.VITALS_CONFIG.icon}
