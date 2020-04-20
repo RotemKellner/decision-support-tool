@@ -15,6 +15,7 @@ import AccountCircleOutlinedIcon from '@material-ui/icons/AccountCircleOutlined'
 import {Patient} from './Patient';
 import {LungsIcon, PulseIcon} from '../../../icons/icons';
 import isIsraeliIdValid from 'israeli-id-validator';
+import Typography from '@material-ui/core/Typography';
 
 const styles = theme => ({
   leftPanel: {
@@ -138,7 +139,7 @@ class Dashboard extends Component {
       {text: 'Temperature', key: 'temperature', unit: 'Celsius'},
       {text: 'Pulse', key: 'pulse', unit: 'Per minute'},
       {text: 'Respiratory Rate', key: 'respiratory_rate', unit: 'Per minute'},
-      {text: 'O2 Saturation', key: 'oxygen_saturation', unit: 'ABG'}
+      {text: <Typography>O<sub>2</sub> Saturation</Typography>, key: 'oxygen_saturation', unit: 'ABG'}
     ]
   };
 
