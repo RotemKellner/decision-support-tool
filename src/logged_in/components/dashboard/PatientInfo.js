@@ -9,6 +9,7 @@ import Box from '@material-ui/core/Box';
 import TextField from '@material-ui/core/TextField';
 import isIsraeliIdValid from 'israeli-id-validator';
 import theme from '../../../theme';
+import LargeIcon from '../ui_components/LargeIcon';
 
 const styles = theme => ({
   idInput: {
@@ -54,7 +55,7 @@ class PatientInfo extends Component {
   return <Grid container spacing={2} alignItems={'center'}>
     <Grid item md={2}>
       <ListItem>
-        <Icon style={{ color: this.getColor() }}/>
+        <LargeIcon icon={Icon} color={this.getColor()}></LargeIcon>
         <Box m={1} color="text.primary" fontWeight={'bold'}>Patient</Box>
       </ListItem>
     </Grid>

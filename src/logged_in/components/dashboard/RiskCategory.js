@@ -5,6 +5,7 @@ import { fade } from '@material-ui/core/styles/colorManipulator';
 import Box from '@material-ui/core/Box';
 import Chip from '@material-ui/core/Chip';
 import theme from '../../../theme';
+import LargeIcon from '../ui_components/LargeIcon';
 
 const styles = theme => ({
   chipWrapper: {
@@ -28,7 +29,7 @@ class RiskCategory extends Component {
     return <Grid container spacing={2} alignItems={'center'}>
       <Grid item md={2}>
         <ListItem>
-          <Icon style={{ color: this.getColor() }}/>
+          <LargeIcon icon={Icon} color={this.getColor()}></LargeIcon>
           <Box m={1} color="text.primary" fontWeight={'bold'}>{this.props.categoryName}</Box>
         </ListItem>
       </Grid>

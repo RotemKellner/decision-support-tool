@@ -5,6 +5,7 @@ import {Grid, ListItem, Typography, withStyles} from '@material-ui/core';
 import Box from '@material-ui/core/Box';
 import TextField from '@material-ui/core/TextField';
 import theme from '../../../theme';
+import LargeIcon from '../ui_components/LargeIcon';
 
 const styles = theme => ({
   input: {
@@ -29,7 +30,7 @@ class Vitals extends Component {
   return <Grid container spacing={2} alignItems={'center'}>
     <Grid item md={2}>
       <ListItem>
-        <Icon style={{ color: this.getColor() }}/>
+        <LargeIcon icon={Icon} color={this.getColor()}></LargeIcon>
         <Box m={1}/>
         <Typography
           variant={'body2'}
