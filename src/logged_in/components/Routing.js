@@ -6,7 +6,6 @@ import PropsRoute from "../../shared/components/PropsRoute";
 
 const styles = theme => ({
   wrapper: {
-    margin: theme.spacing(1),
     width: "auto",
     [theme.breakpoints.up("md")]: {
       width: "100%",

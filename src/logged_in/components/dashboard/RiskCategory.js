@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import PropTypes from "prop-types";
-import {Grid, ListItem, Typography, withStyles} from '@material-ui/core';
+import {Grid, ListItem, withStyles} from '@material-ui/core';
 import { fade } from '@material-ui/core/styles/colorManipulator';
 import Box from '@material-ui/core/Box';
 import Chip from '@material-ui/core/Chip';
@@ -29,13 +29,7 @@ class RiskCategory extends Component {
       <Grid item md={2}>
         <ListItem>
           <Icon style={{ color: this.getColor() }}/>
-          <Box m={1}/>
-          <Typography
-            variant={'body2'}
-            display={'inline'}
-            color="primary">
-            {this.props.categoryName}
-          </Typography>
+          <Box m={1} color="text.primary" fontWeight={'bold'}>{this.props.categoryName}</Box>
         </ListItem>
       </Grid>
       <Grid item md={10} className={classes.chipWrapper}>

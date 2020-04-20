@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import PropTypes from "prop-types";
-import {Grid, ListItem, Typography, withStyles} from '@material-ui/core';
+import {Grid, ListItem, withStyles} from '@material-ui/core';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Radio from '@material-ui/core/Radio';
@@ -55,13 +55,7 @@ class PatientInfo extends Component {
     <Grid item md={2}>
       <ListItem>
         <Icon style={{ color: this.getColor() }}/>
-        <Box m={1}/>
-        <Typography
-          variant={'body2'}
-          display={'inline'}
-          color="primary">
-          Patient
-        </Typography>
+        <Box m={1} color="text.primary" fontWeight={'bold'}>Patient</Box>
       </ListItem>
     </Grid>
     <Grid item md={10}>
