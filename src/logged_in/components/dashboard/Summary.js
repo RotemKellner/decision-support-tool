@@ -16,34 +16,37 @@ import Chip from '@material-ui/core/Chip';
 import MultiColorProgressBar from './MultiColorProgressBar';
 import Dashboard from './Dashboard';
 import html2canvas from 'html2canvas';
+import BigBlue from '../ui_components/BigBlue';
+import theme from '../../../theme';
 
 const styles = theme => ({
   section1: {
-    margin: theme.spacing(3),
+    flex: 1
   },
   section2: {
-    margin: theme.spacing(3)
+    flex: 3
   },
   section3: {
-    margin: theme.spacing(3),
+    position: 'sticky',
+    bottom: 0
   },
   chips: {
-    paddingTop: theme.spacing(1)
+    paddingTop: theme.spacing(2)
   },
   divider: {
     height: 1
   }
 });
 
-function getProgressData(riskScores) {
+function getProgressData(props) {
   const MAX_VALUE = 20;
   let makeNice = a => a.toFixed(1).replace(/[.,]00$/, "");
   let toPrecent = (item) => makeNice(((item / MAX_VALUE) * 100));
 
   let results = [];
-  for (let key in riskScores) {
+  for (let key in props.riskScores) {
     let color = Dashboard.SCORE_CATEGORIES.find(config => config.text === key).color;
-    results.push({name: key, value: makeNice(riskScores[key]), percent: toPrecent(riskScores[key]), color});
+    results.push({name: key, value: makeNice(props.riskScores[key]), percent: toPrecent(props.riskScores[key]), color});
   }
   let emptyPercentage = 100 - results.map(r => Number(r.percent)).reduce((a,b) => a + b, 0);
   if (emptyPercentage) {
@@ -64,43 +67,37 @@ function Summary(props) {
   const { classes } = props;
 
   return (
-    <div>
-      <div className={classes.section1}>
-        <Grid container alignItems="center">
-          <Grid item xs>
-            <MultiColorProgressBar readings={getProgressData(props.riskScores)}/>
-          </Grid>
-          {/*<Grid item>*/}
-          {/*  <OutlinedInput value={props.totalRiskScore.toPrecision(3)}></OutlinedInput>*/}
-          {/*</Grid>*/}
-        </Grid>
-      </div>
-      <Grid container direction={'column'} alignContent={'center'}>
-        <Grid item className={classes.section2} container={true} justify={'center'}>
+    <Grid container direction={'column'} style={{height: '100%'}}>
+      <Box mt={3} flex={1} className={classes.section1}>
+        <MultiColorProgressBar readings={getProgressData(props)}/>
+      </Box>
+      <Grid container direction={'column'} alignContent={'center'} className={classes.section2}>
+        <Grid item container={true} justify={'center'}>
           <Grid
             container
             direction="column"
             justify="center"
             alignItems="center">
-            <Typography gutterBottom>
+            <Box color={props.recommendation.risk_score ? theme.palette.secondary.main : theme.palette.common.lightGrey}>
               Recommendation
-            </Typography>
+            </Box>
+
 
             {(() => {
-              switch (props.recommendation.recommendation) {
+              switch (props.recommendation.risk_score && props.recommendation.recommendation) {
                 case 'home':
-                  return <Chip size={'medium'} color="secondary" icon={<HomeIcon />} label={'Home'}/>;
+                  return <BigBlue icon={HomeIcon} label={'Home'}/>;
                 case 'hotel':
-                  return <Chip size={'medium'} color="secondary" icon={<HotelIcon />} label={'Hotel'}/>;
+                  return <BigBlue icon={HotelIcon} label={'Hotel'}/>;
                 case 'hospital':
-                  return <Chip size={'medium'} color="secondary" icon={<LocalHospitalIcon />} label={'Hospital'}/>;
+                  return <BigBlue icon={LocalHospitalIcon} label={'Hospital'}/>;
                 default:
-                  return ''
+                  return <BigBlue disable={true}/>
               }
             })()}
           </Grid>
         </Grid>
-        <Grid item className={classes.section3}>
+        <Box mt={10}>
           <Grid container direction={'column'} alignContent={'center'}>
             <Grid item container={true} justify={'center'}>
               <Box mr={1}><RobotIcon></RobotIcon></Box>
@@ -115,18 +112,16 @@ function Summary(props) {
               <Chip variant="outlined" color="secondary" icon={<LocalHospitalIcon />} label={'Hospital'}/>
             </Grid>
           </Grid>
-        </Grid>
+        </Box>
       </Grid>
-      <Divider light classes={{root: classes.divider}}/>
-      <Grid container justify={'space-around'}>
-        <Grid item>
+      <Box className={classes.section3}>
+        <Divider light classes={{root: classes.divider}}/>
+        <Grid container justify={'space-evenly'}>
           <Button startIcon={<SaveAltIcon fontSize="small" />} color="secondary" onClick={screenshot}>Save</Button>
-        </Grid>
-        <Grid item>
           <Button startIcon={<CloseIcon fontSize="small" />} color="secondary" onClick={props.onClearAll}>Clear all</Button>
         </Grid>
-      </Grid>
-    </div>
+      </Box>
+    </Grid>
   );
 }
 

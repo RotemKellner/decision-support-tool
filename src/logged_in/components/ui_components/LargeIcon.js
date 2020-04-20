@@ -10,7 +10,7 @@ const styles = theme => ({
 class LargeIcon extends Component {
   render() {
     const Icon = this.props.icon;
-    return <Box fontSize={32}><Icon style={{ display: 'flex', color: this.props.color }} fontSize={'inherit'}/></Box>
+    return <Box style={{ display: 'inline-block' }} fontSize={32}><Icon style={{ display: 'flex', color: this.props.color }} fontSize={'inherit'}/></Box>
   };
 }
 
