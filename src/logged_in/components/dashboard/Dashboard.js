@@ -4,7 +4,7 @@ import {Grid, withStyles} from '@material-ui/core';
 import Summary from './Summary';
 import RiskCategory from './RiskCategory';
 import HomeOutlinedIcon from '@material-ui/icons/HomeOutlined';
-import ListAltOutlinedIcon from '@material-ui/icons/ListAltOutlined';
+import AssignmentOutlinedIcon from '@material-ui/icons/AssignmentOutlined';
 import FavoriteBorderOutlinedIcon from '@material-ui/icons/FavoriteBorderOutlined';
 import Divider from '@material-ui/core/Divider';
 import Box from '@material-ui/core/Box';
@@ -80,7 +80,7 @@ class Dashboard extends Component {
     {
       text: "Other Conditions",
       color: "#F08627",
-      icon: ListAltOutlinedIcon,
+      icon: AssignmentOutlinedIcon,
       items: [
         {
           key: 'dm',
