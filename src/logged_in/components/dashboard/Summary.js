@@ -18,6 +18,7 @@ import Dashboard from './Dashboard';
 import html2canvas from 'html2canvas';
 import BigBlue from '../ui_components/BigBlue';
 import theme from '../../../theme';
+import DissagreementDialog from "./DissagreementDialog";
 
 const styles = theme => ({
   section1: {
@@ -56,6 +57,19 @@ function getProgressData(props) {
 }
 
 function Summary(props) {
+
+  const [open, setOpen] = React.useState(false);
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  function checkForDisagreement(buttonClicked) {
+     if (props.recommendation.risk_score && buttonClicked !== props.recommendation.recommendation) {
+       setOpen(true);
+     }
+  }
+
   function screenshot() {
     html2canvas(document.querySelector('.MuiGrid-root')).then(canvas => {
       var a = document.createElement('a');
@@ -107,11 +121,12 @@ function Summary(props) {
               <Typography variant={'body2'}>Human input will improve the algorithm</Typography>
             </Grid>
             <Grid item container={true} justify={'space-evenly'} className={classes.chips}>
-              <Chip variant="outlined" color="secondary" icon={<HomeIcon />} label={'Home'}/>
-              <Chip variant="outlined" color="secondary" icon={<HotelIcon />} label={'Hotel'}/>
-              <Chip variant="outlined" color="secondary" icon={<LocalHospitalIcon />} label={'Hospital'}/>
+              <Chip variant="outlined" color="secondary" icon={<HomeIcon />} label={'Home'} onClick={() => checkForDisagreement('home')}/>
+              <Chip variant="outlined" color="secondary" icon={<HotelIcon />} label={'Hotel'} onClick={() => checkForDisagreement('hotel')}/>
+              <Chip variant="outlined" color="secondary" icon={<LocalHospitalIcon />} label={'Hospital'} onClick={() => checkForDisagreement('hospital')}/>
             </Grid>
           </Grid>
+          <DissagreementDialog handleClose={handleClose} open={open}/>
         </Box>
       </Grid>
       <Box className={classes.section3}>
