@@ -8,7 +8,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
-function DissagreementDialog(props) {
+function DisagreementDialog(props) {
     return(
     <div>
         <Dialog open={props.open} onClose={props.handleClose} aria-labelledby="form-dialog-title">
@@ -35,10 +35,9 @@ function DissagreementDialog(props) {
     </div>)
 }
 
-DissagreementDialog.propTypes = {
+DisagreementDialog.propTypes = {
     handleClose: PropTypes.func.isRequired,
     open: PropTypes.bool.isRequired
-
 };
 
-export default (DissagreementDialog);
+export default (DisagreementDialog);
