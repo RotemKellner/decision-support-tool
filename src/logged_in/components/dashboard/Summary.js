@@ -18,6 +18,7 @@ import Dashboard from './Dashboard';
 import html2canvas from 'html2canvas';
 import BigBlue from '../ui_components/BigBlue';
 import theme from '../../../theme';
+import DisagreementDialog from "./DisagreementDialog";
 
 const styles = theme => ({
   section1: {
@@ -37,6 +38,11 @@ const styles = theme => ({
     height: 1
   }
 });
+const feedbackTypes = {
+  home: 'home',
+  hotel: 'hotel',
+  hospital: 'hospital'
+};
 
 function getProgressData(props) {
   const MAX_VALUE = 20;
@@ -55,7 +61,27 @@ function getProgressData(props) {
   return results;
 }
 
+function capitalize(s) {
+  if (typeof s !== 'string') return '';
+  return s.charAt(0).toUpperCase() + s.slice(1)
+}
+
 function Summary(props) {
+
+  const [open, setOpen] = React.useState(false);
+  const [feedback, setFeedback] = React.useState(undefined);
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  function selectFeedback(selectedFeedback) {
+    setFeedback(selectedFeedback);
+     if (props.recommendation.risk_score && selectedFeedback !== props.recommendation.recommendation) {
+       setOpen(true);
+     }
+  }
+
   function screenshot() {
     html2canvas(document.querySelector('.MuiGrid-root')).then(canvas => {
       var a = document.createElement('a');
@@ -64,6 +90,11 @@ function Summary(props) {
       a.click();
     })
   }
+
+  function getVariant(feedbackType) {
+    return feedback === feedbackType ? 'default' : 'outlined';
+  }
+
   const { classes } = props;
 
   return (
@@ -85,12 +116,12 @@ function Summary(props) {
 
             {(() => {
               switch (props.recommendation.risk_score && props.recommendation.recommendation) {
-                case 'home':
-                  return <BigBlue icon={HomeIcon} label={'Home'}/>;
-                case 'hotel':
-                  return <BigBlue icon={HotelIcon} label={'Hotel'}/>;
-                case 'hospital':
-                  return <BigBlue icon={LocalHospitalIcon} label={'Hospital'}/>;
+                case feedbackTypes.home:
+                  return <BigBlue icon={HomeIcon} label={capitalize(feedbackTypes.home)}/>;
+                case feedbackTypes.hotel:
+                  return <BigBlue icon={HotelIcon} label={capitalize(feedbackTypes.hotel)}/>;
+                case feedbackTypes.hospital:
+                  return <BigBlue icon={LocalHospitalIcon} label={capitalize(feedbackTypes.hospital)}/>;
                 default:
                   return <BigBlue disable={true}/>
               }
@@ -107,11 +138,12 @@ function Summary(props) {
               <Typography variant={'body2'}>Human input will improve the algorithm</Typography>
             </Grid>
             <Grid item container={true} justify={'space-evenly'} className={classes.chips}>
-              <Chip variant="outlined" color="secondary" icon={<HomeIcon />} label={'Home'}/>
-              <Chip variant="outlined" color="secondary" icon={<HotelIcon />} label={'Hotel'}/>
-              <Chip variant="outlined" color="secondary" icon={<LocalHospitalIcon />} label={'Hospital'}/>
+              <Chip variant={getVariant(feedbackTypes.home)} color="secondary" icon={<HomeIcon />} label={capitalize(feedbackTypes.home)} onClick={() => selectFeedback(feedbackTypes.home)}/>
+              <Chip variant={getVariant(feedbackTypes.hotel)} color="secondary" icon={<HotelIcon />} label={capitalize(feedbackTypes.hotel)} onClick={() => selectFeedback(feedbackTypes.hotel)}/>
+              <Chip variant={getVariant(feedbackTypes.hospital)} color="secondary" icon={<LocalHospitalIcon />} label={capitalize(feedbackTypes.hospital)} onClick={() => selectFeedback(feedbackTypes.hospital)}/>
             </Grid>
           </Grid>
+          <DisagreementDialog handleClose={handleClose} open={open}/>
         </Box>
       </Grid>
       <Box className={classes.section3}>
